@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <h1>Charlie + Beth</h1>
+      <h1>To-do List</h1>
       <div className='allNotes'>
         {listItems.map((item) => <span> {item} </span>)}
       </div>
