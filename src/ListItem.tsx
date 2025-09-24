@@ -1,4 +1,4 @@
-import type { ListItem } from "./listDAO";
+import { createListItem, type ListItem } from "./listDAO";
 import tick from "./assets/tick.svg"
 import plus from "./assets/plus.svg"
 
@@ -8,7 +8,15 @@ interface CheckBoxProps {
 function CheckBox({ status }: CheckBoxProps) {
 
     return (
-        <div style={{ borderStyle: "solid", borderColor: "white", borderRadius: "0.25rem", width: "2rem", height: "2rem", display: "flex", marginRight: "1rem" }}
+        <div style={{
+            borderStyle: "solid",
+            borderColor: "white",
+            borderRadius: "0.25rem",
+            width: "2rem",
+            height: "2rem",
+            display: "flex",
+            marginRight: "1rem"
+        }}
             onClick={() => alert()}>
             {status === "complete" ? <img src={tick} /> : null} </div>
     )
@@ -29,18 +37,44 @@ export default function ListItemRow({ item }: ListItemProps) {
 interface AddRowProps {
     noteToAdd: string,
     setNoteToAdd: (s: string) => void
+    refreshKey: number
+    setRefreshKey: (n: number) => void
 }
 
-export function AddRow({ noteToAdd, setNoteToAdd }: AddRowProps) {
+export function AddRow({ noteToAdd, setNoteToAdd, refreshKey, setRefreshKey }: AddRowProps) {
     return (
         <div style={{ display: "flex", alignItems: "center", paddingTop: "0.9rem" }}>
-            <div style={{ borderStyle: "solid", borderColor: "white", borderRadius: "0.25rem", width: "2rem", height: "2rem", display: "flex", marginRight: "1rem" }}
-                onClick={() => alert("Adding note!")}>
+            <div style={{
+                borderStyle: "solid",
+                borderColor: "white",
+                borderRadius: "0.25rem",
+                width: "2rem",
+                height: "2rem",
+                display: "flex",
+                marginRight: "1rem",
+                cursor: "pointer"
+            }}
+                onClick={() => {
+                    createListItem({ content: noteToAdd, status: "incomplete", tag: undefined })
+                        .then(() => {
+                            setRefreshKey(refreshKey + 1)
+                            setNoteToAdd("")
+                        })
+                }
+                }>
                 <img src={plus} />
             </div>
-            <input style={{ width: "10rem", backgroundColor: "grey", height: "2rem", borderRadius: "0.5rem", fontSize: "1.5rem" }} value={noteToAdd} onChange={(event) => {
-                setNoteToAdd(event.currentTarget.value)
-            }} />
-        </div>
+            <input style={{
+                width: "10rem",
+                backgroundColor: "grey",
+                height: "2rem",
+                borderRadius: "0.5rem",
+                fontSize: "1.5rem"
+            }}
+                value={noteToAdd}
+                onChange={(event) => {
+                    setNoteToAdd(event.currentTarget.value)
+                }} />
+        </div >
     )
 }
