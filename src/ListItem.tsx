@@ -1,11 +1,19 @@
-import { createListItem, type ListItem } from "./listDAO";
+import { createListItem, editStatus, type ListItem } from "./listDAO";
 import tick from "./assets/tick.svg"
 import plus from "./assets/plus.svg"
+import { useMemo, useState } from "react";
 
 interface CheckBoxProps {
-    status: string
+    item: ListItem
 }
-function CheckBox({ status }: CheckBoxProps) {
+function CheckBox({ item }: CheckBoxProps) {
+    const [refreshKey, setRefreshKey] = useState(1)
+
+    let checked = false
+
+    useMemo(() => {
+        checked = item.status == "complete"
+    }, [refreshKey])
 
     return (
         <div style={{
@@ -17,8 +25,8 @@ function CheckBox({ status }: CheckBoxProps) {
             display: "flex",
             marginRight: "1rem"
         }}
-            onClick={() => alert()}>
-            {status === "complete" ? <img src={tick} /> : null} </div>
+            onClick={() => editStatus(item).then(() => setRefreshKey(refreshKey + 1))}>
+            {checked ? <img src={tick} /> : null} </div>
     )
 }
 
@@ -29,7 +37,7 @@ interface ListItemProps {
 export default function ListItemRow({ item }: ListItemProps) {
 
     return (<div key={item.id} style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
-        <CheckBox status={item.status} />
+        <CheckBox item={item} />
         <p style={{ fontSize: "1.2rem" }}> {item.content} </p>
     </div>)
 }
