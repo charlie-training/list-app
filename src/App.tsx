@@ -22,9 +22,9 @@ function App() {
   if (!apiKey) return <Login />
 
   return (
-    <div style={{ padding: "1rem", maxWidth: "90vw" }}>
+    <div style={{ display: "flex", flexDirection: "column", padding: "1rem", maxWidth: "90vw", justifyItems: "center" }}>
       <ApiGuard>
-        <h1>To-do List</h1>
+        <h1 style={{ textAlign: "center" }}>To-do List</h1>
         <div className='allNotes'>
           {listItems.map((item, index) => <ListItemRow
             key={index}

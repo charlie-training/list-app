@@ -96,12 +96,13 @@ interface AddRowProps {
 
 export function AddRow({ noteToAdd, setNoteToAdd, refreshKey, setRefreshKey }: AddRowProps) {
     return (
-        <div style={{ display: "flex", alignItems: "center", paddingTop: "0.9rem", paddingLeft: "3.35rem" }}>
+        <div style={{ display: "flex", paddingTop: "0.9rem", paddingLeft: "3.35rem" }}>
 
             <input
                 name="notetoadd"
                 style={{
-                    width: "15rem",
+                    display: "flex",
+                    width: "14rem",
                     backgroundColor: "grey",
                     height: "2rem",
                     borderRadius: "0.5rem",
