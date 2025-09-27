@@ -98,13 +98,15 @@ export function AddRow({ noteToAdd, setNoteToAdd, refreshKey, setRefreshKey }: A
     return (
         <div style={{ display: "flex", alignItems: "center", paddingTop: "0.9rem", paddingLeft: "3.35rem" }}>
 
-            <input style={{
-                width: "15rem",
-                backgroundColor: "grey",
-                height: "2rem",
-                borderRadius: "0.5rem",
-                fontSize: "1.5rem"
-            }}
+            <input
+                name="notetoadd"
+                style={{
+                    width: "15rem",
+                    backgroundColor: "grey",
+                    height: "2rem",
+                    borderRadius: "0.5rem",
+                    fontSize: "1.5rem"
+                }}
                 value={noteToAdd}
                 onChange={(event) => {
                     setNoteToAdd(event.currentTarget.value)

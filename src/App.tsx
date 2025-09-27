@@ -22,7 +22,7 @@ function App() {
   if (!apiKey) return <Login />
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div style={{ padding: "1rem", maxWidth: "90vw" }}>
       <ApiGuard>
         <h1>To-do List</h1>
         <div className='allNotes'>
