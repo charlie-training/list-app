@@ -22,7 +22,7 @@ function App() {
   if (!apiKey) return <Login />
 
   return (
-    <>
+    <div style={{ padding: "1rem" }}>
       <ApiGuard>
         <h1>To-do List</h1>
         <div className='allNotes'>
@@ -39,7 +39,7 @@ function App() {
             setRefreshKey={setRefreshKey} />
         </div>
       </ApiGuard>
-    </>
+    </div>
   )
 }
 
