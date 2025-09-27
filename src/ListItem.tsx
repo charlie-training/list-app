@@ -1,18 +1,19 @@
-import { createListItem, editStatus, type ListItem } from "./listDAO";
+import { createListItem, deleteListItem, editStatus, type ListItem } from "./listDAO";
 import tick from "./assets/tick.svg"
 import plus from "./assets/plus.svg"
+import bin from "./assets/bin.svg"
 import { useMemo, useState } from "react";
 
 interface CheckBoxProps {
-    item: ListItem
+    item: ListItem,
+    refreshKey: number,
+    setRefreshKey: (n: number) => void
 }
-function CheckBox({ item }: CheckBoxProps) {
-    const [refreshKey, setRefreshKey] = useState(1)
-
-    let checked = false
+function CheckBox({ item, refreshKey, setRefreshKey }: CheckBoxProps) {
+    const [checked, setChecked] = useState(item.status == "complete")
 
     useMemo(() => {
-        checked = item.status == "complete"
+        setChecked(item.status == "complete")
     }, [refreshKey])
 
     return (
@@ -30,15 +31,59 @@ function CheckBox({ item }: CheckBoxProps) {
     )
 }
 
-interface ListItemProps {
-    item: ListItem
+interface DeleteIconProps {
+    itemId?: number
+    refreshKey: number,
+    setRefreshKey: (n: number) => void
 }
 
-export default function ListItemRow({ item }: ListItemProps) {
+function DeleteIcon({ itemId, refreshKey, setRefreshKey }: DeleteIconProps) {
+    return (
+        <div style={{
+            borderStyle: "solid",
+            borderColor: "red",
+            borderRadius: "0.25rem",
+            width: "2rem",
+            height: "2rem",
+            display: "flex",
+            marginRight: "1rem",
+            backgroundColor: "red"
+        }}
+            onClick={() => {
+                if (itemId) deleteListItem(itemId).then(() => setRefreshKey(refreshKey + 1))
+            }}>
+            <img src={bin} />
+        </div>
+    )
+}
+
+interface ListItemProps {
+    item: ListItem
+    refreshKey: number,
+    setRefreshKey: (n: number) => void
+}
+
+export default function ListItemRow({ item, refreshKey, setRefreshKey }: ListItemProps) {
+    const [contentStatus, setContentStatus] = useState({ content: item.content, status: item.status })
+
+    useMemo(() => {
+        console.log("Fetching listItemRow...");
+
+        setContentStatus({ content: item.content, status: item.status })
+    }, [refreshKey])
 
     return (<div key={item.id} style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
-        <CheckBox item={item} />
-        <p style={{ fontSize: "1.2rem" }}> {item.content} </p>
+        <DeleteIcon
+            itemId={item.id}
+            refreshKey={refreshKey}
+            setRefreshKey={setRefreshKey} />
+
+        <CheckBox item={item} refreshKey={refreshKey} setRefreshKey={setRefreshKey} />
+        <p style={{
+            fontSize: "1.2rem",
+            textDecoration: contentStatus.status === "complete" ? "line-through 3px" : "none",
+            color: item.status === "complete" ? "grey" : "white"
+        }}> {contentStatus.content} </p>
     </div>)
 }
 
@@ -51,7 +96,7 @@ interface AddRowProps {
 
 export function AddRow({ noteToAdd, setNoteToAdd, refreshKey, setRefreshKey }: AddRowProps) {
     return (
-        <div style={{ display: "flex", alignItems: "center", paddingTop: "0.9rem" }}>
+        <div style={{ display: "flex", alignItems: "center", paddingTop: "0.9rem", paddingLeft: "3.35rem" }}>
             <div style={{
                 borderStyle: "solid",
                 borderColor: "white",
@@ -73,7 +118,7 @@ export function AddRow({ noteToAdd, setNoteToAdd, refreshKey, setRefreshKey }: A
                 <img src={plus} />
             </div>
             <input style={{
-                width: "10rem",
+                width: "15rem",
                 backgroundColor: "grey",
                 height: "2rem",
                 borderRadius: "0.5rem",

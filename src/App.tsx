@@ -26,7 +26,12 @@ function App() {
       <ApiGuard>
         <h1>To-do List</h1>
         <div className='allNotes'>
-          {listItems.map((item) => <ListItemRow item={item} />)}
+          {listItems.map((item, index) => <ListItemRow
+            key={index}
+            item={item}
+            refreshKey={refreshKey}
+            setRefreshKey={setRefreshKey}
+          />)}
           <AddRow
             noteToAdd={noteToAdd}
             setNoteToAdd={setNoteToAdd}

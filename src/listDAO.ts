@@ -49,3 +49,15 @@ export async function editStatus(item: ListItem) {
 
     return (await response.json())
 }
+
+export async function deleteListItem(id: number) {
+    const apiKey = window.localStorage.getItem("listappkey") ?? "";
+    const response = await fetch(`${baseApiUrl}/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+            "List-App-Key": apiKey
+        },
+    })
+
+    return (await response.json())
+}
