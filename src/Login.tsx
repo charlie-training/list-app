@@ -9,6 +9,7 @@ export default function Login() {
             <input id="apikey" value={apiKey} onChange={(event) => setApiKey(event.currentTarget.value)} />
             <button onClick={() => {
                 window.localStorage.setItem("listappkey", apiKey)
+                window.location.reload()
             }}
                 style={{ marginLeft: "10px" }}> Submit </button>
         </>
