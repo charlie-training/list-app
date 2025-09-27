@@ -97,6 +97,18 @@ interface AddRowProps {
 export function AddRow({ noteToAdd, setNoteToAdd, refreshKey, setRefreshKey }: AddRowProps) {
     return (
         <div style={{ display: "flex", alignItems: "center", paddingTop: "0.9rem", paddingLeft: "3.35rem" }}>
+
+            <input style={{
+                width: "15rem",
+                backgroundColor: "grey",
+                height: "2rem",
+                borderRadius: "0.5rem",
+                fontSize: "1.5rem"
+            }}
+                value={noteToAdd}
+                onChange={(event) => {
+                    setNoteToAdd(event.currentTarget.value)
+                }} />
             <div style={{
                 borderStyle: "solid",
                 borderColor: "white",
@@ -104,7 +116,7 @@ export function AddRow({ noteToAdd, setNoteToAdd, refreshKey, setRefreshKey }: A
                 width: "2rem",
                 height: "2rem",
                 display: "flex",
-                marginRight: "1rem",
+                marginLeft: "1rem",
                 cursor: "pointer"
             }}
                 onClick={() => {
@@ -117,17 +129,6 @@ export function AddRow({ noteToAdd, setNoteToAdd, refreshKey, setRefreshKey }: A
                 }>
                 <img src={plus} />
             </div>
-            <input style={{
-                width: "15rem",
-                backgroundColor: "grey",
-                height: "2rem",
-                borderRadius: "0.5rem",
-                fontSize: "1.5rem"
-            }}
-                value={noteToAdd}
-                onChange={(event) => {
-                    setNoteToAdd(event.currentTarget.value)
-                }} />
         </div >
     )
 }
