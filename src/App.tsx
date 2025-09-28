@@ -33,7 +33,8 @@ function App() {
 
       <ApiGuard>
         <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>To-do List</h1>
-        <div style={{ display: "flex", cursor: "pointer" }} onClick={() => setRefreshKey(refreshKey + 1)}>
+        <div style={{ display: "flex", cursor: "pointer" }}
+          onClick={() => setRefreshKey(refreshKey + 1)}>
           <img style={{
             width: "2rem",
             marginRight: "0",
