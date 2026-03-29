@@ -1,4 +1,4 @@
-export interface ListItem {
+export interface ListItemDB {
     id?: number,
     content: string,
     status: "complete" | "incomplete",
@@ -7,13 +7,15 @@ export interface ListItem {
 
 export const baseApiUrl = "https://list-app-worker.cxlegge.workers.dev"
 
+
+
 function switchStatus(status: string) {
     if (status == "incomplete") { return "complete" }
     return "incomplete"
 
 }
 
-export async function createListItem(listItem: ListItem) {
+export async function createListItem(listItem: ListItemDB) {
     const apiKey = window.localStorage.getItem("listappkey") ?? "";
     console.log(JSON.stringify(listItem))
     await fetch(baseApiUrl + "/create", {
@@ -23,6 +25,7 @@ export async function createListItem(listItem: ListItem) {
             "List-App-Key": apiKey
         }
     })
+
 }
 
 export async function getAllListItems() {
@@ -37,7 +40,7 @@ export async function getAllListItems() {
     return (await response.json())
 }
 
-export async function editStatus(item: ListItem) {
+export async function editStatus(item: ListItemDB) {
     const apiKey = window.localStorage.getItem("listappkey") ?? "";
     const response = await fetch(`${baseApiUrl}/edit/${item.id}`, {
         method: "PUT",
