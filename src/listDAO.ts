@@ -17,7 +17,6 @@ function switchStatus(status: string) {
 
 export async function createListItem(listItem: ListItemDB) {
     const apiKey = window.localStorage.getItem("listappkey") ?? "";
-    console.log(JSON.stringify(listItem))
     await fetch(baseApiUrl + "/create", {
         method: "POST",
         body: JSON.stringify(listItem),

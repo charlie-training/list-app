@@ -9,6 +9,7 @@ import refresh from "./assets/refresh.svg";
 function App() {
   const [listItems, setListItems] = useState<ListItemDB[]>([]);
   const [noteToAdd, setNoteToAdd] = useState("");
+  const [tagToAdd, setTagToAdd] = useState("")
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
@@ -64,6 +65,8 @@ function App() {
           <AddRow
             noteToAdd={noteToAdd}
             setNoteToAdd={setNoteToAdd}
+            tagToAdd={tagToAdd}
+            setTagToAdd={setTagToAdd}
             refreshKey={refreshKey}
             setRefreshKey={setRefreshKey}
           />

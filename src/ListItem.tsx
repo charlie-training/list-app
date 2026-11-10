@@ -8,6 +8,7 @@ import tick from "./assets/tick.svg";
 import plus from "./assets/plus.svg";
 import bin from "./assets/bin.svg";
 import { useMemo, useState, type SetStateAction } from "react";
+import Chip from "./Chip";
 
 interface CheckBoxProps {
   item: ListItemDB;
@@ -28,13 +29,14 @@ function CheckBox({ item, refreshKey, setRefreshKey }: CheckBoxProps) {
         borderColor: "white",
         borderRadius: "0.25rem",
         width: "2rem",
+        minWidth: "2rem",
         height: "2rem",
         display: "flex",
         marginRight: "1rem",
       }}
       onClick={() => editStatus(item).then(() => setRefreshKey(refreshKey + 1))}
     >
-      {checked ? <img src={tick} /> : null}{" "}
+      {checked ? <img src={tick} /> : null}
     </div>
   );
 }
@@ -84,48 +86,60 @@ export default function ListItemRow({
   const [contentStatus, setContentStatus] = useState({
     content: item.content,
     status: item.status,
+    tag: item.tag
   });
 
-  useMemo(() => {
-    console.log("Fetching listItemRow...");
+  const isLink = contentStatus.content.startsWith("https://")
 
-    setContentStatus({ content: item.content, status: item.status });
+  useMemo(() => {
+    setContentStatus({ content: item.content, status: item.status, tag: item.tag });
   }, [refreshKey]);
 
   return (
-    <div
-      key={item.id}
-      style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-    >
-      <DeleteIcon
-        itemId={item.id}
-        refreshKey={refreshKey}
-        setRefreshKey={setRefreshKey}
-      />
-
-      <CheckBox
-        item={item}
-        refreshKey={refreshKey}
-        setRefreshKey={setRefreshKey}
-      />
-      <p
-        style={{
-          fontSize: "1.2rem",
-          textDecoration:
-            contentStatus.status === "complete" ? "line-through 3px" : "none",
-          color: item.status === "complete" ? "grey" : "white",
-        }}
+    <>
+      <div
+        key={item.id}
+        style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
       >
-        {" "}
-        {contentStatus.content}{" "}
-      </p>
-    </div>
+        <DeleteIcon
+          itemId={item.id}
+          refreshKey={refreshKey}
+          setRefreshKey={setRefreshKey}
+        />
+
+        <CheckBox
+          item={item}
+          refreshKey={refreshKey}
+          setRefreshKey={setRefreshKey}
+        />
+        <p
+          style={{
+            fontSize: "1.2rem",
+            textDecoration:
+              contentStatus.status === "complete" ? "line-through 3px" : "none",
+            color: item.status === "complete" ? "grey" : "white",
+            textDecorationLine: isLink ? "underline" : "unset"
+          }}
+          onClick={() => {
+            if (isLink) window.open(contentStatus.content, "_blank")
+          }}
+        >
+          {contentStatus.content}
+        </p>
+
+      </div>
+      {contentStatus.tag && (
+        <Chip content={contentStatus.tag} />
+      )}
+    </>
   );
 }
 
 interface AddRowProps {
   noteToAdd: string;
   setNoteToAdd: (s: string) => void;
+  tagToAdd: string;
+  setTagToAdd: (s: string) => void;
   refreshKey: number;
   setRefreshKey: (n: number) => void;
 }
@@ -133,6 +147,8 @@ interface AddRowProps {
 export function AddRow({
   noteToAdd,
   setNoteToAdd,
+  tagToAdd,
+  setTagToAdd,
   refreshKey,
   setRefreshKey,
 }: AddRowProps) {
@@ -140,21 +156,40 @@ export function AddRow({
     <div
       style={{ display: "flex", paddingTop: "0.9rem", paddingLeft: "3.35rem" }}
     >
-      <input
-        name="notetoadd"
-        style={{
-          display: "flex",
-          width: "14rem",
-          backgroundColor: "grey",
-          height: "2rem",
-          borderRadius: "0.5rem",
-          fontSize: "1.5rem",
-        }}
-        value={noteToAdd}
-        onChange={(event) => {
-          setNoteToAdd(event.currentTarget.value);
-        }}
-      />
+      <div>
+        <input
+          name="notetoadd"
+          placeholder="note"
+          style={{
+            display: "flex",
+            width: "14rem",
+            backgroundColor: "grey",
+            height: "2rem",
+            borderRadius: "0.5rem",
+            fontSize: "1.5rem"
+          }}
+          value={noteToAdd}
+          onChange={(event) => {
+            setNoteToAdd(event.currentTarget.value);
+          }}
+        />
+        <input
+          name="tagtoadd"
+          placeholder="tag (optional)"
+          style={{
+            display: "flex",
+            width: "14rem",
+            backgroundColor: "grey",
+            height: "2rem",
+            borderRadius: "0.5rem",
+            fontSize: "1.5rem",
+          }}
+          value={tagToAdd}
+          onChange={(event) => {
+            setTagToAdd(event.currentTarget.value);
+          }}
+        />
+      </div>
       <div
         style={{
           borderStyle: "solid",
@@ -170,13 +205,15 @@ export function AddRow({
           createListItem({
             content: noteToAdd,
             status: "incomplete",
-            tag: undefined,
+            tag: tagToAdd.length > 0 ? tagToAdd : undefined,
           }).then(() => {
             setRefreshKey(refreshKey + 1);
             setNoteToAdd("");
+            setTagToAdd("")
           });
         }}
       >
+
         <img src={plus} />
       </div>
     </div>
