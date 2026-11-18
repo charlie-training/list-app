@@ -7,8 +7,9 @@ import {
 import tick from "./assets/tick.svg";
 import plus from "./assets/plus.svg";
 import bin from "./assets/bin.svg";
-import { useMemo, useState, type SetStateAction } from "react";
+import { useEffect, useState, type SetStateAction } from "react";
 import Chip from "./Chip";
+import { parseTags } from "./tags";
 
 interface CheckBoxProps {
   item: ListItemDB;
@@ -16,11 +17,11 @@ interface CheckBoxProps {
   setRefreshKey: React.Dispatch<SetStateAction<number>>;
 }
 function CheckBox({ item, refreshKey, setRefreshKey }: CheckBoxProps) {
-  const [checked, setChecked] = useState(item.status == "complete");
+  const [checked, setChecked] = useState(item.status === "complete");
 
-  useMemo(() => {
-    setChecked(item.status == "complete");
-  }, [refreshKey]);
+  useEffect(() => {
+    setChecked(item.status === "complete");
+  }, [item.status, refreshKey]);
 
   return (
     <div
@@ -86,14 +87,14 @@ export default function ListItemRow({
   const [contentStatus, setContentStatus] = useState({
     content: item.content,
     status: item.status,
-    tag: item.tag
+    tag: item.tag,
   });
 
-  const isLink = contentStatus.content.startsWith("https://")
+  const isLink = contentStatus.content.startsWith("https://");
 
-  useMemo(() => {
+  useEffect(() => {
     setContentStatus({ content: item.content, status: item.status, tag: item.tag });
-  }, [refreshKey]);
+  }, [item, refreshKey]);
 
   return (
     <>
@@ -106,7 +107,6 @@ export default function ListItemRow({
           refreshKey={refreshKey}
           setRefreshKey={setRefreshKey}
         />
-
         <CheckBox
           item={item}
           refreshKey={refreshKey}
@@ -118,19 +118,18 @@ export default function ListItemRow({
             textDecoration:
               contentStatus.status === "complete" ? "line-through 3px" : "none",
             color: item.status === "complete" ? "grey" : "white",
-            textDecorationLine: isLink ? "underline" : "unset"
+            textDecorationLine: isLink ? "underline" : "unset",
           }}
           onClick={() => {
-            if (isLink) window.open(contentStatus.content, "_blank")
+            if (isLink) window.open(contentStatus.content, "_blank");
           }}
         >
           {contentStatus.content}
         </p>
-
       </div>
-      {contentStatus.tag && (
-        <Chip content={contentStatus.tag} />
-      )}
+      {parseTags(contentStatus.tag ?? "").map((tag) => (
+        <Chip content={tag} key={tag} />
+      ))}
     </>
   );
 }
@@ -152,6 +151,8 @@ export function AddRow({
   refreshKey,
   setRefreshKey,
 }: AddRowProps) {
+  const tags = parseTags(tagToAdd);
+
   return (
     <div
       style={{ display: "flex", paddingTop: "0.9rem", paddingLeft: "3.35rem" }}
@@ -166,28 +167,24 @@ export function AddRow({
             backgroundColor: "grey",
             height: "2rem",
             borderRadius: "0.5rem",
-            fontSize: "1.5rem"
+            fontSize: "1.5rem",
           }}
           value={noteToAdd}
-          onChange={(event) => {
-            setNoteToAdd(event.currentTarget.value);
-          }}
+          onChange={(event) => setNoteToAdd(event.currentTarget.value)}
         />
         <input
           name="tagtoadd"
-          placeholder="tag (optional)"
+          placeholder="tags (space or comma separated)"
           style={{
             display: "flex",
             width: "14rem",
             backgroundColor: "grey",
             height: "2rem",
             borderRadius: "0.5rem",
-            fontSize: "1.5rem",
+            fontSize: "1.1rem",
           }}
           value={tagToAdd}
-          onChange={(event) => {
-            setTagToAdd(event.currentTarget.value);
-          }}
+          onChange={(event) => setTagToAdd(event.currentTarget.value)}
         />
       </div>
       <div
@@ -205,15 +202,14 @@ export function AddRow({
           createListItem({
             content: noteToAdd,
             status: "incomplete",
-            tag: tagToAdd.length > 0 ? tagToAdd : undefined,
+            tag: tags.length > 0 ? tags.join(",") : undefined,
           }).then(() => {
             setRefreshKey(refreshKey + 1);
             setNoteToAdd("");
-            setTagToAdd("")
+            setTagToAdd("");
           });
         }}
       >
-
         <img src={plus} />
       </div>
     </div>
