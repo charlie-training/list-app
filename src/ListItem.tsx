@@ -1,8 +1,7 @@
 import {
   createListItem,
   deleteListItem,
-  editListItemTags,
-  editStatus,
+  editListItem,
   type ListItemDB,
 } from "./listDAO";
 import tick from "./assets/tick.svg";
@@ -35,7 +34,12 @@ function CheckBox({ item, refreshKey, setRefreshKey }: CheckBoxProps) {
         marginRight: "1rem",
         cursor: "pointer",
       }}
-      onClick={() => editStatus(item).then(() => setRefreshKey(refreshKey + 1))}
+      onClick={() =>
+        editListItem({
+          ...item,
+          status: item.status === "incomplete" ? "complete" : "incomplete",
+        }).then(() => setRefreshKey((state) => state + 1))
+      }
     >
       {checked ? <img src={tick} /> : null}
     </div>
@@ -116,7 +120,7 @@ export default function ListItemRow({
       return;
     }
     void runMenuAction(
-      () => editListItemTags(item, parseTags(tagInput).join(",")),
+      () => editListItem({ ...item, tag: parseTags(tagInput).join(",") }),
       "Failed to update list item tags.",
     );
   }

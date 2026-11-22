@@ -7,11 +7,6 @@ export interface ListItemDB {
 
 export const baseApiUrl = "https://list-app-worker.cxlegge.workers.dev"
 
-function switchStatus(status: string) {
-    if (status == "incomplete") { return "complete" }
-    return "incomplete"
-}
-
 export async function createListItem(listItem: ListItemDB) {
     const apiKey = window.localStorage.getItem("listappkey") ?? "";
     await fetch(baseApiUrl + "/create", {
@@ -34,10 +29,6 @@ export async function getAllListItems() {
     return (await response.json())
 }
 
-export async function editStatus(item: ListItemDB) {
-    return updateListItem({ ...item, status: switchStatus(item.status) })
-}
-
 export async function deleteListItem(id: number) {
     const apiKey = window.localStorage.getItem("listappkey") ?? "";
     const response = await fetch(`${baseApiUrl}/delete/${id}`, {
@@ -54,7 +45,7 @@ export async function deleteListItem(id: number) {
     return (await response.json())
 }
 
-async function updateListItem(item: ListItemDB) {
+export async function editListItem(item: ListItemDB) {
     const apiKey = window.localStorage.getItem("listappkey") ?? "";
     const response = await fetch(`${baseApiUrl}/edit/${item.id}`, {
         method: "PUT",
@@ -69,8 +60,4 @@ async function updateListItem(item: ListItemDB) {
     }
 
     return (await response.json())
-}
-
-export async function editListItemTags(item: ListItemDB, tag: string) {
-    return updateListItem({ ...item, tag })
 }
