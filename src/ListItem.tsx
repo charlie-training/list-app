@@ -26,9 +26,8 @@ function CheckBox({ item, refreshKey, setRefreshKey }: CheckBoxProps) {
   return (
     <div
       style={{
-        borderStyle: "solid",
-        borderColor: "white",
         borderRadius: "0.25rem",
+        border: " solid white",
         width: "2rem",
         minWidth: "2rem",
         height: "2rem",
@@ -59,6 +58,7 @@ function DeleteIcon({ itemId, setRefreshKey }: DeleteIconProps) {
         height: "2rem",
         display: "flex",
         marginRight: "1rem",
+        marginLeft: "2px",
         backgroundColor: "red",
       }}
       onClick={() => {
@@ -100,7 +100,12 @@ export default function ListItemRow({
     <>
       <div
         key={item.id}
-        style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+        className="list-item-row"
+        style={{
+          cursor: "pointer",
+          border: "1px solid grey",
+          padding: "2px",
+        }}
       >
         <DeleteIcon
           itemId={item.id}
@@ -112,24 +117,30 @@ export default function ListItemRow({
           refreshKey={refreshKey}
           setRefreshKey={setRefreshKey}
         />
-        <p
-          style={{
-            fontSize: "1.2rem",
-            textDecoration:
-              contentStatus.status === "complete" ? "line-through 3px" : "none",
-            color: item.status === "complete" ? "grey" : "white",
-            textDecorationLine: isLink ? "underline" : "unset",
-          }}
-          onClick={() => {
-            if (isLink) window.open(contentStatus.content, "_blank");
-          }}
-        >
-          {contentStatus.content}
-        </p>
+        <div className="list-item-content">
+          <p
+            className="list-item-note"
+            style={{
+              fontSize: "1.2rem",
+              textDecoration:
+                contentStatus.status === "complete" ? "line-through 3px" : "none",
+              color: item.status === "complete" ? "grey" : "white",
+              textDecorationLine: isLink ? "underline" : "unset",
+            }}
+            onClick={() => {
+              if (isLink) window.open(contentStatus.content, "_blank");
+            }}
+          >
+            {contentStatus.content}
+          </p>
+          <div className="list-item-tags">
+            {parseTags(contentStatus.tag ?? "").map((tag) => (
+              <Chip content={tag} key={tag} />
+            ))}
+          </div>
+        </div>
       </div>
-      {parseTags(contentStatus.tag ?? "").map((tag) => (
-        <Chip content={tag} key={tag} />
-      ))}
+
     </>
   );
 }

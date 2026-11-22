@@ -39,7 +39,7 @@ function App() {
         display: "flex",
         flexDirection: "column",
         padding: "1rem",
-        maxWidth: "90vw",
+        maxWidth: "100vw",
         justifyItems: "center",
       }}
     >
@@ -78,7 +78,7 @@ function App() {
             <img src={refresh} />
           </button>
         </div>
-        <div className="allNotes">
+        <div style={{ marginTop: "0.5rem" }}>
           {filteredItems.map((item) => (
             <ListItemRow
               key={item.id}
