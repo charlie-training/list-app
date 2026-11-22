@@ -94,6 +94,7 @@ function App() {
             setTagToAdd={setTagToAdd}
             refreshKey={refreshKey}
             setRefreshKey={setRefreshKey}
+            selectedTag={selectedTag}
           />
         </div>
       </ApiGuard>

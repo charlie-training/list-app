@@ -7,12 +7,9 @@ export interface ListItemDB {
 
 export const baseApiUrl = "https://list-app-worker.cxlegge.workers.dev"
 
-
-
 function switchStatus(status: string) {
     if (status == "incomplete") { return "complete" }
     return "incomplete"
-
 }
 
 export async function createListItem(listItem: ListItemDB) {
@@ -24,7 +21,6 @@ export async function createListItem(listItem: ListItemDB) {
             "List-App-Key": apiKey
         }
     })
-
 }
 
 export async function getAllListItems() {
@@ -35,7 +31,6 @@ export async function getAllListItems() {
             "List-App-Key": apiKey
         }
     })
-
     return (await response.json())
 }
 
@@ -48,7 +43,6 @@ export async function editStatus(item: ListItemDB) {
         },
         body: JSON.stringify(Object.assign(item, { status: switchStatus(item.status) }))
     })
-
     return (await response.json())
 }
 

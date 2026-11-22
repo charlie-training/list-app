@@ -141,6 +141,7 @@ interface AddRowProps {
   setTagToAdd: (s: string) => void;
   refreshKey: number;
   setRefreshKey: (n: number) => void;
+  selectedTag: string | null;
 }
 
 export function AddRow({
@@ -150,6 +151,7 @@ export function AddRow({
   setTagToAdd,
   refreshKey,
   setRefreshKey,
+  selectedTag
 }: AddRowProps) {
   const tags = parseTags(tagToAdd);
 
@@ -202,7 +204,7 @@ export function AddRow({
           createListItem({
             content: noteToAdd,
             status: "incomplete",
-            tag: tags.length > 0 ? tags.join(",") : undefined,
+            tag: tags.length > 0 ? tags.join(",") : selectedTag ?? undefined,
           }).then(() => {
             setRefreshKey(refreshKey + 1);
             setNoteToAdd("");
