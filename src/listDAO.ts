@@ -35,15 +35,7 @@ export async function getAllListItems() {
 }
 
 export async function editStatus(item: ListItemDB) {
-    const apiKey = window.localStorage.getItem("listappkey") ?? "";
-    const response = await fetch(`${baseApiUrl}/edit/${item.id}`, {
-        method: "PUT",
-        headers: {
-            "List-App-Key": apiKey
-        },
-        body: JSON.stringify(Object.assign(item, { status: switchStatus(item.status) }))
-    })
-    return (await response.json())
+    return updateListItem({ ...item, status: switchStatus(item.status) })
 }
 
 export async function deleteListItem(id: number) {
@@ -55,5 +47,30 @@ export async function deleteListItem(id: number) {
         },
     })
 
+    if (!response.ok) {
+        throw new Error(`Failed to delete list item (${response.status}).`);
+    }
+
     return (await response.json())
+}
+
+async function updateListItem(item: ListItemDB) {
+    const apiKey = window.localStorage.getItem("listappkey") ?? "";
+    const response = await fetch(`${baseApiUrl}/edit/${item.id}`, {
+        method: "PUT",
+        headers: {
+            "List-App-Key": apiKey
+        },
+        body: JSON.stringify(item)
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to update list item (${response.status}).`);
+    }
+
+    return (await response.json())
+}
+
+export async function editListItemTags(item: ListItemDB, tag: string) {
+    return updateListItem({ ...item, tag })
 }
