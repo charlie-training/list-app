@@ -40,7 +40,7 @@ function App() {
         flexDirection: "column",
         padding: "1rem",
         maxWidth: "100vw",
-        justifyItems: "center",
+        justifyItems: "start",
       }}
     >
       <ApiGuard>
